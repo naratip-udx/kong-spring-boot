@@ -26,6 +26,6 @@ consumers:
   - username: app-consumers
     jwt_secrets:
       - key: "http://my-auth-service"
-        # สำคัญมาก: ในการออกจริงคีย์นี้ต้องยาวอย่างน้อย 32 ตัวอักษร (256-bit)
-        secret: "my-local-shared-secret-key-for-dev-32chars"
-        algorithm: HS256
+        # เรียกใช้ค่าที่ส่งมาจาก Docker Compose Environment
+        secret: "${{JWT_SECRET}}"
+        algorithm: base64
