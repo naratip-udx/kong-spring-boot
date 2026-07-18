@@ -1,0 +1,31 @@
+_format_version: "3.0"
+
+services:
+  # 1. Route สำหรับเข้าใช้งาน Auth Service (Public Route - ไม่ใส่ jwt plugin)
+  - name: auth-service
+    url: http://auth-service:8081
+    routes:
+      - name: auth-route
+        paths:
+          - /auth
+
+  # 2. Route สำหรับเข้าใช้งาน Order Service (Secure Route - ใส่ jwt plugin)
+  - name: order-service
+    url: http://order-service:8082
+    routes:
+      - name: order-route
+        paths:
+          - /orders
+        plugins:
+          - name: jwt
+            config:
+              claims_to_verify:
+                - exp
+
+consumers:
+  - username: app-consumers
+    jwt_secrets:
+      - key: "http://my-auth-service"
+        # สำคัญมาก: ในการออกจริงคีย์นี้ต้องยาวอย่างน้อย 32 ตัวอักษร (256-bit)
+        secret: "my-local-shared-secret-key-for-dev-32chars"
+        algorithm: HS256
