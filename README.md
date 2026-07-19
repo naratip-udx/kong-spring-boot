@@ -9,8 +9,8 @@ graph TD
   Client[Client]
   Kong[Kong Gateway]
   
-  Auth["Auth Service<br>(Port: 8082)<br>- /auth/login<br>- /auth/refresh"]
-  Order["Order Service<br>(Port: 8081)<br>- /orders"]
+  Auth["Auth Service<br>(Port: 8081)<br>- /auth/login<br>- /auth/refresh"]
+  Order["Order Service<br>(Port: 8082)<br>- /orders"]
 
   Client -->|Port 8000| Kong
   
