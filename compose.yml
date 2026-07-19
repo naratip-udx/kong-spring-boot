@@ -1,19 +1,23 @@
-version: '3.8'
-
+---
 services:
   kong:
-    image: kong:3.4
+    # image: kong:3.9-ubuntu
+    build: ./kong
     container_name: kong-gateway
     environment:
       KONG_DATABASE: "off"
-      KONG_DECLARATIVE_CONFIG: /opt/kong/kong.yml
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
       KONG_PROXY_LISTEN: 0.0.0.0:8000
-      # ส่งค่า JWT_SECRET เข้าไปใน Kong Container
+      KONG_PLUGINS: bundled,request-transformer,pre-function,post-function
+      KONG_NGINX_MAIN_USER: ""
+      JWT_SECRET_ISSUER: ${JWT_SECRET_ISSUER}
       JWT_SECRET: ${JWT_SECRET}
+    command: |
+      sh -c "envsubst < /etc/kong/kong.yml.template > /etc/kong/kong.yml && kong start"
     ports:
       - "8000:8000"
     volumes:
-      - ./kong:/opt/kong
+      - ./kong:/etc/kong
     networks:
       - microservices-net
 
@@ -23,7 +27,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      # ส่งตัวแปรเข้าไปใน Spring Boot Container
+      - JWT_SECRET_ISSUER=${JWT_SECRET_ISSUER}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
     networks:
@@ -34,6 +38,9 @@ services:
     container_name: order-service
     ports:
       - "8082:8082"
+    environment:
+      - JWT_SECRET_ISSUER=${JWT_SECRET_ISSUER}
+      - JWT_SECRET=${JWT_SECRET}
     networks:
       - microservices-net
 

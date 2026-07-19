@@ -32,6 +32,6 @@ services:
 consumers:
   - username: app-consumers
     jwt_secrets:
-      - key: http://my-auth-service
-        secret: 454414cb5cc1a57b702d9480214cd11a
+      - key: ${JWT_SECRET_ISSUER}
+        secret: ${JWT_SECRET}
         algorithm: HS256
