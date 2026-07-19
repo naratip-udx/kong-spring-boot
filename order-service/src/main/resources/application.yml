@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: order-service
+
+server:
+  port: 8082
+
+app:
+  jwt:
+    issuer: ${JWT_SECRET_ISSUER}
+    secret: ${JWT_SECRET}
